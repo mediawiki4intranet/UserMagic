@@ -28,9 +28,9 @@ if (!defined('MEDIAWIKI'))
 $wgExtensionCredits['parserhook'][] = array(
     'name'        => 'UserMagic',
     'author'      => 'Vitaliy Filippov',
-    'description' => 'Defines several username-producing magic words.',
+    'description' => 'Defines several additional magic words, incl. USERNAME, USERIP, CREATIONTS and etc.',
     'url'         => 'http://yourcmc.ru/wiki/UserMagic_(MediaWiki)',
-    'version'     => '1.1'
+    'version'     => '1.2 (2010-03-26)',
 );
 
 $wgExtensionMessagesFiles['UserMagic'] = dirname(__FILE__) . '/UserMagic.i18n.php';
@@ -42,6 +42,14 @@ function efUserMagicMagicWordwgVariableIDs(&$mVariablesIDs)
     wfLoadExtensionMessages('UserMagic');
     $mVariablesIDs[] = 'username';
     $mVariablesIDs[] = 'userip';
+    $mVariablesIDs[] = 'creationts';
+    $mVariablesIDs[] = 'creationdate';
+    $mVariablesIDs[] = 'creationyear';
+    $mVariablesIDs[] = 'creationmonth';
+    $mVariablesIDs[] = 'creationday';
+    $mVariablesIDs[] = 'creationhour';
+    $mVariablesIDs[] = 'creationminute';
+    $mVariablesIDs[] = 'creationsecond';
     return true;
 }
 
@@ -53,9 +61,34 @@ function efUserMagicParserGetVariableValueSwitch(&$parser, &$varCache, &$index, 
         $ret = $wgUser->getName();
         return true;
     }
-    else if ($index == 'userip')
+    elseif ($index == 'userip')
     {
         $ret = wfGetIP();
+        return true;
+    }
+    elseif (substr($index, 0, 8) == 'creation' && $parser->mTitle)
+    {
+        $pageid = $parser->mTitle->getArticleID();
+        $dbr = wfGetDB(DB_SLAVE);
+        $id = $dbr->selectField('revision', 'rev_id', array('rev_page' => $pageid),
+            __FUNCTION__, array('ORDER BY' => 'rev_timestamp ASC', 'LIMIT' => 1));
+        $ret = Revision::newFromId($id);
+        $type = substr($index, 8);
+        $ret = wfTimestamp(TS_DB, $ret->getTimestamp());
+        if ($type == 'day')
+            $ret = intval(substr($ret, 8, 2));
+        elseif ($type == 'month')
+            $ret = intval(substr($ret, 5, 2));
+        elseif ($type == 'year')
+            $ret = intval(substr($ret, 0, 4));
+        elseif ($type == 'hour')
+            $ret = intval(substr($ret, 11, 2));
+        elseif ($type == 'minute')
+            $ret = intval(substr($ret, 14, 2));
+        elseif ($type == 'second')
+            $ret = intval(substr($ret, 17, 2));
+        elseif ($type == 'date')
+            $ret = substr($ret, 0, 10);
         return true;
     }
     return false;
