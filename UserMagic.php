@@ -70,8 +70,10 @@ function efUserMagicParserGetVariableValueSwitch(&$parser, &$varCache, &$index, 
     {
         $pageid = $parser->mTitle->getArticleID();
         $dbr = wfGetDB(DB_SLAVE);
-        $id = $dbr->selectField('revision', 'rev_id', array('rev_page' => $pageid),
-            __FUNCTION__, array('ORDER BY' => 'rev_timestamp ASC', 'LIMIT' => 1));
+        $id = $dbr->selectField(
+            'revision', 'rev_id', array('rev_page' => $pageid),
+            __FUNCTION__, array('ORDER BY' => 'rev_timestamp ASC', 'LIMIT' => 1)
+        );
         $ret = Revision::newFromId($id);
         $type = substr($index, 8);
         $ret = wfTimestamp(TS_DB, $ret->getTimestamp());
