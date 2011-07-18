@@ -57,15 +57,9 @@ function efUserMagicParserGetVariableValueSwitch(&$parser, &$varCache, &$index, 
 {
     global $wgUser;
     if ($index == 'username')
-    {
         $ret = $wgUser->getName();
-        return true;
-    }
     elseif ($index == 'userip')
-    {
         $ret = wfGetIP();
-        return true;
-    }
     elseif (substr($index, 0, 8) == 'creation' && $parser->mTitle)
     {
         $pageid = $parser->mTitle->getArticleID();
@@ -91,7 +85,6 @@ function efUserMagicParserGetVariableValueSwitch(&$parser, &$varCache, &$index, 
             $ret = intval(substr($ret, 17, 2));
         elseif ($type == 'date')
             $ret = substr($ret, 0, 10);
-        return true;
     }
-    return false;
+    return true;
 }
