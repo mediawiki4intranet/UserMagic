@@ -29,7 +29,7 @@ $wgExtensionCredits['parserhook'][] = array(
     'name'        => 'UserMagic',
     'author'      => 'Vitaliy Filippov',
     'description' => 'Defines several additional magic words, incl. USERNAME, USERIP, CREATIONTS and etc.',
-    'url'         => 'http://yourcmc.ru/wiki/UserMagic_(MediaWiki)',
+    'url'         => 'http://wiki.4intra.net/UserMagic',
     'version'     => '1.2 (2010-03-26)',
 );
 
