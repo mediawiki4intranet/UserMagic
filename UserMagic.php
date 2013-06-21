@@ -63,12 +63,23 @@ function efUserMagicParserGetVariableValueSwitch(&$parser, &$varCache, &$index, 
     elseif (substr($index, 0, 8) == 'creation' && $parser->mTitle)
     {
         $pageid = $parser->mTitle->getArticleID();
+        if (!$pageid)
+        {
+            $ret = '';
+            return true;
+        }
         $dbr = wfGetDB(DB_SLAVE);
-        $id = $dbr->selectField(
-            'revision', 'rev_id', array('rev_page' => $pageid),
+        $res = $dbr->select(
+            'revision', '*', array('rev_page' => $pageid),
             __FUNCTION__, array('ORDER BY' => 'rev_timestamp ASC', 'LIMIT' => 1)
         );
-        $ret = Revision::newFromId($id);
+        $row = $res->fetchObject();
+        if (!$row)
+        {
+            $ret = '';
+            return true;
+        }
+        $ret = Revision::newFromRow($row);
         $type = substr($index, 8);
         $ret = wfTimestamp(TS_DB, $ret->getTimestamp());
         if ($type == 'day')
