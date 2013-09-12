@@ -39,7 +39,6 @@ $wgHooks['ParserGetVariableValueSwitch'][] = 'efUserMagicParserGetVariableValueS
 
 function efUserMagicMagicWordwgVariableIDs(&$mVariablesIDs)
 {
-    wfLoadExtensionMessages('UserMagic');
     $mVariablesIDs[] = 'username';
     $mVariablesIDs[] = 'userip';
     $mVariablesIDs[] = 'creationts';
