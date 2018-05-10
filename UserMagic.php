@@ -52,7 +52,7 @@ function efUserMagicMagicWordwgVariableIDs(&$mVariablesIDs)
     return true;
 }
 
-function efUserMagicParserGetVariableValueSwitch(&$parser, &$varCache, &$index, &$ret)
+function efUserMagicParserGetVariableValueSwitch($parser, &$varCache, &$index, &$ret)
 {
     global $wgUser;
     if ($index == 'username')
